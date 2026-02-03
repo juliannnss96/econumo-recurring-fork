@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity repository-class="App\EconumoBundle\Infrastructure\Doctrine\Repository\RecurringTransactionRepository"
+            name="App\EconumoBundle\Domain\Entity\RecurringTransaction" table="recurring_transactions">
+        <id name="id" type="uuid" column="id"/>
+
+        <field name="type" type="transaction_type" column="type" nullable="false"/>
+        <field name="amount" type="decimal_number_type" column="amount" precision="19" scale="8" nullable="false"/>
+        <field name="description" type="string" column="description" nullable="false"/>
+        <field name="interval" type="recurring_interval_type" column="interval" nullable="false"/>
+        <field name="nextRunDate" type="datetime" column="next_run_date" nullable="false"/>
+        <field name="isActive" type="boolean" column="is_active" nullable="false">
+             <options>
+                <option name="default">1</option>
+            </options>
+        </field>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
+        <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
+
+        <many-to-one field="user" target-entity="App\EconumoBundle\Domain\Entity\User">
+            <join-column name="user_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+        <many-to-one field="account" target-entity="App\EconumoBundle\Domain\Entity\Account">
+            <join-column name="account_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+        <many-to-one field="category" target-entity="App\EconumoBundle\Domain\Entity\Category">
+            <join-column name="category_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+        </many-to-one>
+        <many-to-one field="payee" target-entity="App\EconumoBundle\Domain\Entity\Payee">
+            <join-column name="payee_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+        </many-to-one>
+        <many-to-one field="tag" target-entity="App\EconumoBundle\Domain\Entity\Tag">
+            <join-column name="tag_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+        </many-to-one>
+
+        <indexes>
+            <index columns="next_run_date" name="next_run_date_idx_recurring_transactions"/>
+            <index columns="is_active" name="is_active_idx_recurring_transactions"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>

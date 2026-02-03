@@ -13,6 +13,7 @@ import { useCurrencyRatesStore } from './currency-rates';
 import { useConnectionsStore } from './connections';
 import { useBudgetsStore } from './budgets';
 import { useUsersStore } from './users';
+import { useRecurringTransactionsStore } from './recurring-transactions';
 import { DATE_TIME_FORMAT } from '../modules/constants';
 
 export const useSyncStore = defineStore('sync', () => {
@@ -29,6 +30,7 @@ export const useSyncStore = defineStore('sync', () => {
       useCurrencyRatesStore().isCurrencyRatesLoaded &&
       useConnectionsStore().isConnectionsLoaded &&
       useUsersStore().isUserDataLoaded &&
+      useRecurringTransactionsStore().isLoaded &&
       useTransactionsStore().isTransactionsLoaded;
   });
 
@@ -45,6 +47,7 @@ export const useSyncStore = defineStore('sync', () => {
       useCurrencyRatesStore().fetchCurrencyRates(),
       useConnectionsStore().fetchConnections(),
       useBudgetsStore().fetchBudgets(),
+      useRecurringTransactionsStore().fetchItems(),
       useUsersStore().fetchUserData().then(() => {
         useBudgetsStore().fetchUserBudget();
       })
@@ -56,95 +59,102 @@ export const useSyncStore = defineStore('sync', () => {
   function fetchUpdates() {
     const config: (
       { updatedAt: string | null; timeout: { minutes: number; }; update: () => void; } | {
-      updatedAt: string | null;
-      timeout: { hours: number; };
-      update: () => void;
-    })[] = [
-      {
-        updatedAt: useUsersStore().userDataLoadedAt,
-        timeout: { minutes: 24 },
-        update: () => {
-          useUsersStore().fetchUserData();
+        updatedAt: string | null;
+        timeout: { hours: number; };
+        update: () => void;
+      })[] = [
+        {
+          updatedAt: useUsersStore().userDataLoadedAt,
+          timeout: { minutes: 24 },
+          update: () => {
+            useUsersStore().fetchUserData();
+          }
+        },
+        {
+          updatedAt: useAccountFoldersStore().accountFoldersLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useAccountFoldersStore().fetchAccountFolders();
+          }
+        },
+        {
+          updatedAt: useAccountsStore().accountsLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useAccountsStore().fetchAccounts();
+          }
+        },
+        {
+          updatedAt: useCategoriesStore().categoriesLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useCategoriesStore().fetchCategories();
+          }
+        },
+        {
+          updatedAt: useTagsStore().tagsLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useTagsStore().fetchTags();
+          }
+        },
+        {
+          updatedAt: usePayeesStore().payeesLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            usePayeesStore().fetchPayees();
+          }
+        },
+        {
+          updatedAt: useTransactionsStore().transactionsLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useTransactionsStore().fetchTransactions();
+          }
+        },
+        {
+          updatedAt: useCurrenciesStore().currenciesLoadedAt,
+          timeout: { hours: 24 },
+          update: () => {
+            useCurrenciesStore().fetchCurrencies();
+          }
+        },
+        {
+          updatedAt: useCurrencyRatesStore().currencyRatesLoadedAt,
+          timeout: { hours: 24 },
+          update: () => {
+            useCurrencyRatesStore().fetchCurrencyRates();
+          }
+        },
+        {
+          updatedAt: useConnectionsStore().connectionsLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useConnectionsStore().fetchConnections();
+          }
+        },
+        {
+          updatedAt: useBudgetsStore().budgetsLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useBudgetsStore().fetchBudgets();
+          }
+        },
+        {
+          updatedAt: useBudgetsStore().budgetLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useBudgetsStore().fetchUserBudget();
+          }
+        },
+        {
+          updatedAt: useRecurringTransactionsStore().itemsLoadedAt,
+          timeout: { minutes: 10 },
+          update: () => {
+            useRecurringTransactionsStore().fetchItems();
+          }
         }
-      },
-      {
-        updatedAt: useAccountFoldersStore().accountFoldersLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          useAccountFoldersStore().fetchAccountFolders();
-        }
-      },
-      {
-        updatedAt: useAccountsStore().accountsLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          useAccountsStore().fetchAccounts();
-        }
-      },
-      {
-        updatedAt: useCategoriesStore().categoriesLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          useCategoriesStore().fetchCategories();
-        }
-      },
-      {
-        updatedAt: useTagsStore().tagsLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          useTagsStore().fetchTags();
-        }
-      },
-      {
-        updatedAt: usePayeesStore().payeesLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          usePayeesStore().fetchPayees();
-        }
-      },
-      {
-        updatedAt: useTransactionsStore().transactionsLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          useTransactionsStore().fetchTransactions();
-        }
-      },
-      {
-        updatedAt: useCurrenciesStore().currenciesLoadedAt,
-        timeout: { hours: 24 },
-        update: () => {
-          useCurrenciesStore().fetchCurrencies();
-        }
-      },
-      {
-        updatedAt: useCurrencyRatesStore().currencyRatesLoadedAt,
-        timeout: { hours: 24 },
-        update: () => {
-          useCurrencyRatesStore().fetchCurrencyRates();
-        }
-      },
-      {
-        updatedAt: useConnectionsStore().connectionsLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          useConnectionsStore().fetchConnections();
-        }
-      },
-      {
-        updatedAt: useBudgetsStore().budgetsLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          useBudgetsStore().fetchBudgets();
-        }
-      },
-      {
-        updatedAt: useBudgetsStore().budgetLoadedAt,
-        timeout: { minutes: 10 },
-        update: () => {
-          useBudgetsStore().fetchUserBudget();
-        }
-      }
-    ];
+      ];
     const now = new Date();
     config.forEach(item => {
       let needUpdate = false;

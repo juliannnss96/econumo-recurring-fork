@@ -46,6 +46,17 @@ class HttpApiExceptionListener
                     (int) $exception->getCode()
                 );
             } else {
+                // Log unhandled exceptions for debugging
+                $logMessage = sprintf(
+                    "[%s] Exception: %s\nMessage: %s\nFile: %s:%d\nTrace:\n%s\n\n",
+                    date('Y-m-d H:i:s'),
+                    get_class($exception),
+                    $exception->getMessage(),
+                    $exception->getFile(),
+                    $exception->getLine(),
+                    $exception->getTraceAsString()
+                );
+                file_put_contents('/var/www/var/log/exceptions.log', $logMessage, FILE_APPEND);
                 throw $exception;
             }
         } else {

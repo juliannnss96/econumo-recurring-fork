@@ -18,6 +18,7 @@ import SettingsConnections from 'pages/Settings/Connections.vue';
 import Budget from 'pages/Budget/Budget.vue';
 import Onboarding from 'pages/Onboarding.vue';
 import Home from 'pages/Home.vue';
+import RecurringTransactions from 'pages/RecurringTransactions/RecurringTransactionsPage.vue';
 
 const routes: RouteRecordRaw[] = [];
 
@@ -50,13 +51,14 @@ routes.push({
   path: '/',
   component: ApplicationLayout,
   children: [
-    { 
-      path: '', 
+    {
+      path: '',
       name: RouterPage.HOME,
       component: Home,
-      meta: { requireAuth: true } 
+      meta: { requireAuth: true }
     },
-    { path: '/account/:id', name: RouterPage.ACCOUNT, component: Account, meta: { requireAuth: true } }
+    { path: '/account/:id', name: RouterPage.ACCOUNT, component: Account, meta: { requireAuth: true } },
+    { path: '/recurring', name: RouterPage.RECURRING_TRANSACTIONS, component: RecurringTransactions, meta: { requireAuth: true } }
   ]
 });
 

@@ -15,6 +15,7 @@ export default {
     'main': {
       'budget': 'Budget',
       'onboarding': 'Onboarding',
+      'recurring': 'Recurring',
       'create_account': 'Add an account'
     },
   },

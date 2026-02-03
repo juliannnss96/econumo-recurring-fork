@@ -33,6 +33,7 @@ export enum StorageKeys {
   TRANSACTIONS_LOADED_AT = 'store/transactions/transactions_loaded_at',
   USER_DATA = 'store/users/user_data',
   USER_DATA_LOADED_AT = 'store/users/user_data_loaded_at',
+  RECURRING_TRANSACTIONS = 'store/recurring_transactions/recurring_transactions',
 }
 
 export const hasToken = function (): boolean {
@@ -49,7 +50,7 @@ export const setToken = function (token: string): void {
   if (data.exp) {
     expires = (data.exp - Math.floor(Date.now() / 1000)) / 60 / 60 / 24;
   }
-  Cookies.set('token', token, {expires: expires, secure: config.isHttps()});
+  Cookies.set('token', token, { expires: expires, secure: config.isHttps() });
 };
 
 export const removeToken = function (): void {

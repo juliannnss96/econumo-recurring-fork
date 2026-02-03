@@ -21,6 +21,8 @@ services:
       - '../src/EconumoBundle/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
       - '../src/EconumoBundle/Domain/{Entity,Events,Traits}'
       - '../src/EconumoBundle/Infrastructure/Doctrine/Migrations/**.php'
+      - '../src/EconumoBundle/Infrastructure/Doctrine/Migration/**.php'
+      - '../src/EconumoBundle/Application/RecurringTransaction/Dto/**.php'
 
   # controllers are imported separately to make sure services can be injected
   # as action arguments even if you don't extend any base controller class
@@ -108,3 +110,6 @@ services:
     class: App\EconumoBundle\Domain\Service\ImportTransactionService
     arguments:
       $baseCurrency: '%env(string:ECONUMO_CURRENCY_BASE)%'
+
+  App\EconumoBundle\Domain\Repository\RecurringTransactionRepositoryInterface:
+    class: App\EconumoBundle\Infrastructure\Doctrine\Repository\RecurringTransactionRepository

@@ -24,4 +24,8 @@ fi
 su -s /bin/sh www-data -c "cd /var/www && php bin/console doctrine:migrations:migrate --quiet --no-interaction --allow-no-migration"
 su -s /bin/sh www-data -c "cd /var/www && php bin/console cache:clear"
 
+# Configure and start cron job for recurring transactions
+echo "0 0 * * * cd /var/www && php bin/console econumo:process-recurring >> /var/www/var/log/recurring.log 2>&1" >> /etc/crontabs/root
+/usr/sbin/crond
+
 /usr/bin/supervisord -n -c /etc/supervisord.conf

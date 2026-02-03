@@ -16,5 +16,6 @@ export enum RouterPage {
   SETTINGS_PAYEES = 'settingsPayees',
   SETTINGS_TAGS = 'settingsTags',
   SETTINGS_CONNECTIONS = 'settingsConnections',
-  SETTINGS_BUDGETS = 'settingsBudgets',
+   SETTINGS_BUDGETS = 'settingsBudgets',
+  RECURRING_TRANSACTIONS = 'recurringTransactions',
 }

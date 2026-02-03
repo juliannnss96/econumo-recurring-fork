@@ -41,6 +41,10 @@
           <router-link :to="{name: 'budget'}" class="application-layout-menu-item" @click="openBudget">
             {{ $t('blocks.main.budget') }}
           </router-link>
+          
+          <router-link :to="{name: 'recurringTransactions'}" class="application-layout-menu-item" @click="openRecurring">
+            {{ $t('blocks.main.recurring') }}
+          </router-link>
 
           <template v-if="!accountsTree.length && folders.length">
             <q-list class="application-layout-account-gap">
@@ -290,7 +294,7 @@ const accountsTree = computed(() => {
         if (item.accountCurrency === false) {
           return;
         }
-        if (item.accountCurrency.id === account.currency.id) {
+        if (item.accountCurrency && item.accountCurrency.id === account.currency.id) { // Added null check for item.accountCurrency
           item.amountAccountCurrency += account.balance;
         } else {
           item.accountCurrency = false;
@@ -342,6 +346,10 @@ const closeAccountFolder = (id: string) => accountFoldersStore.closeAccountFolde
 
 function openBudget() {
   openPage('budget', 'budget');
+}
+
+function openRecurring() {
+  openPage('recurringTransactions', 'recurringTransactions');
 }
 
 function openPage(desktopPage: string, mobilePage: string) {
