@@ -15,14 +15,18 @@ echo "window.econumoConfig = {
 
 chown -R www-data:www-data /var/www/ /usr/share/nginx/html/
 
-if [ ! -d "/var/www/var/db" ]; then
-  mkdir -p /var/www/var/db
-  chown -R www-data:www-data /var/www/var/db
+# Ensure database directory exists and has correct permissions
+mkdir -p /var/www/var/db
+chown -R www-data:www-data /var/www/var/db
+chmod -R 775 /var/www/var/db
+
+if [ ! -f "/var/www/var/db/econumo.sqlite" ] && [ ! -f "/var/www/var/db/db.sqlite" ]; then
   su -s /bin/sh www-data -c "cd /var/www && php bin/console doctrine:database:create -q"
 fi
 
 su -s /bin/sh www-data -c "cd /var/www && php bin/console doctrine:migrations:migrate --quiet --no-interaction --allow-no-migration"
 su -s /bin/sh www-data -c "cd /var/www && php bin/console cache:clear"
+su -s /bin/sh www-data -c "cd /var/www && php bin/console lexik:jwt:generate-keypair --skip-if-exists"
 
 # Configure and start cron job for recurring transactions
 echo "0 0 * * * cd /var/www && php bin/console econumo:process-recurring >> /var/www/var/log/recurring.log 2>&1" >> /etc/crontabs/root

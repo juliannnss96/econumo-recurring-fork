@@ -11,9 +11,7 @@
             v-model="form.type"
             spread
             no-caps
-            toggle-color="primary"
-            color="white"
-            text-color="black"
+            class="recurring-type-toggle"
             :options="[
               {label: 'Expense', value: 'expense'},
               {label: 'Income', value: 'income'},
@@ -88,9 +86,9 @@
             :rules="[val => !!val || 'Field is required']"
           />
 
-          <div class="row reverse">
-            <q-btn label="Create" type="submit" color="primary" :loading="loading" />
-            <q-btn label="Cancel" flat color="primary" v-close-popup class="q-mr-sm" />
+          <div class="row justify-end q-gutter-sm">
+            <q-btn label="Cancel" flat class="text-grey-7" v-close-popup />
+            <q-btn label="Create" type="submit" class="bg-econumo-purple text-white" :loading="loading" />
           </div>
         </q-form>
       </q-card-section>
@@ -186,3 +184,28 @@ async function onSubmit() {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.recurring-type-toggle {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  
+  :deep(.q-btn) {
+    flex: 1;
+    border-radius: 0;
+    
+    &:first-child {
+      border-radius: 4px 0 0 4px;
+    }
+    
+    &:last-child {
+      border-radius: 0 4px 4px 0;
+    }
+    
+    &.q-btn--active {
+      background-color: #BD51CF !important;
+      color: white !important;
+    }
+  }
+}
+</style>
